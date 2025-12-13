@@ -55,6 +55,7 @@
             color: white;
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-width: 120px;
         }
 
         .stat span {
@@ -70,6 +71,9 @@
             display: flex;
             gap: 10px;
             z-index: 1000;
+            flex-wrap: wrap;
+            max-width: calc(100vw - 40px);
+            justify-content: flex-end;
         }
 
         .audio-btn {
@@ -83,6 +87,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s;
             font-size: 1em;
+            white-space: nowrap;
         }
 
         .audio-btn:hover {
@@ -130,6 +135,8 @@
             align-items: center;
             justify-content: center;
             margin: 20px auto;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         #hanuman-btn:hover {
@@ -142,13 +149,14 @@
         }
 
         .floating-text {
-            position: absolute;
+            position: fixed;
             font-size: 2em;
             font-weight: bold;
-            color: #ff6600;
+            color: #000000;
             pointer-events: none;
             animation: float-up 1s ease-out forwards;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 999;
         }
 
         @keyframes float-up {
@@ -162,6 +170,179 @@
             }
         }
 
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Custom Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: linear-gradient(135deg, #fff, #ffe6cc);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+            border: 3px solid #ff6600;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.8) translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal h3 {
+            color: #ff6600;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .modal p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-btn.confirm {
+            background: linear-gradient(135deg, #dc3545, #ff6b6b);
+            color: white;
+        }
+
+        .modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .modal-btn.cancel {
+            background: linear-gradient(135deg, #ff6600, #ff9933);
+            color: white;
+        }
+
+        .modal-btn.cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 102, 0, 0.4);
+        }
+
+        /* Particle Effects */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 998;
+            font-size: 1.5em;
+            animation: particleFloat 1.5s ease-out forwards;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(var(--rot));
+            }
+        }
+
+        /* Pulse Animation for Affordable Upgrades */
+        .upgrade.affordable {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 102, 0, 0.4);
+                border-color: #ff9933;
+            }
+            50% {
+                box-shadow: 0 0 20px 5px rgba(255, 102, 0, 0.6);
+                border-color: #ff6600;
+            }
+        }
+
+        /* Success Notification */
+        .success-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #138808, #4CAF50);
+            color: white;
+            padding: 25px 40px;
+            border-radius: 15px;
+            font-weight: bold;
+            z-index: 2001;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: successPop 0.5s ease-out;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
         .upgrades-section {
             background: rgba(255, 255, 255, 0.95);
             padding: 20px;
@@ -169,6 +350,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             max-height: 600px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .upgrades-section h2 {
@@ -203,12 +385,16 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .upgrade-name {
             font-weight: bold;
             color: #ff6600;
             font-size: 1.1em;
+            flex: 1;
+            min-width: 120px;
         }
 
         .upgrade-cost {
@@ -217,6 +403,8 @@
             padding: 5px 12px;
             border-radius: 20px;
             font-weight: bold;
+            white-space: nowrap;
+            font-size: 0.9em;
         }
 
         .upgrade-desc {
@@ -282,18 +470,203 @@
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            header {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
             h1 {
                 font-size: 1.8em;
+            }
+
+            .stats {
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .stat {
+                padding: 10px 15px;
+                min-width: 100px;
+                flex: 1;
+            }
+
+            .stat span {
+                font-size: 1.2em;
+            }
+
+            .audio-controls {
+                top: 10px;
+                right: 10px;
+                gap: 5px;
+            }
+
+            .audio-btn {
+                padding: 8px 12px;
+                font-size: 0.85em;
+            }
+
+            .clicker-section {
+                padding: 20px 15px;
             }
 
             #hanuman-btn {
                 width: 200px;
                 height: 200px;
                 font-size: 3em;
+                margin: 15px auto;
             }
 
-            .stats {
-                gap: 15px;
+            .upgrades-section {
+                padding: 15px;
+                max-height: 500px;
+            }
+
+            .upgrades-section h2 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+
+            .upgrade {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .upgrade-name {
+                font-size: 1em;
+            }
+
+            .upgrade-cost {
+                font-size: 0.85em;
+                padding: 4px 10px;
+            }
+
+            .achievements {
+                padding: 15px;
+                margin-top: 15px;
+            }
+
+            .achievements h2 {
+                font-size: 1.5em;
+                margin-bottom: 12px;
+            }
+
+            .achievement-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+
+            .achievement {
+                padding: 12px;
+            }
+
+            .achievement-icon {
+                font-size: 1.5em;
+            }
+
+            .achievement-name {
+                font-size: 0.8em;
+            }
+
+            .floating-text {
+                font-size: 1.5em;
+            }
+
+            .modal {
+                padding: 20px;
+            }
+
+            .modal h3 {
+                font-size: 1.5em;
+            }
+
+            .modal p {
+                font-size: 1em;
+            }
+
+            .modal-btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 8px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .stat {
+                padding: 8px 12px;
+                min-width: 90px;
+            }
+
+            .stat span {
+                font-size: 1em;
+            }
+
+            .audio-controls {
+                position: relative;
+                top: 0;
+                right: 0;
+                justify-content: center;
+                margin-bottom: 15px;
+                width: 100%;
+            }
+
+            .audio-btn {
+                flex: 1;
+                min-width: 80px;
+            }
+
+            #hanuman-btn {
+                width: 180px;
+                height: 180px;
+                font-size: 2.5em;
+            }
+
+            .clicker-section h2 {
+                font-size: 1.2em;
+                margin-bottom: 15px;
+            }
+
+            .clicker-section p {
+                font-size: 1em;
+            }
+
+            .upgrades-section {
+                max-height: 400px;
+            }
+
+            .achievement-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .floating-text {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            #hanuman-btn {
+                width: 150px;
+                height: 150px;
+                font-size: 2em;
+            }
+
+            .stat {
+                min-width: 80px;
+                padding: 6px 10px;
+            }
+
+            .stat span {
+                font-size: 0.9em;
             }
         }
     </style>
@@ -307,7 +680,7 @@
         </div>
 
         <header>
-            <h1>🕉️ Hanuman Clicker 🕉️</h1>
+            <h1>🕉️ श्री राम नाम जप 🕉️</h1>
             <div class="stats">
                 <div class="stat">
                     <div>राम धन</div>
@@ -357,8 +730,28 @@
         // Initialize Audio Context
         async function initAudio() {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            await createBackgroundMusic();
-            await loadClickSample();
+
+            // try to resume immediately (may still be suspended by autoplay policy)
+            try { await audioContext.resume(); } catch (e) { /* ignore */ }
+
+            if (audioContext.state === 'suspended') {
+                // show a fallback Start Music button so user can start audio without using main clicker
+                const btn = document.createElement('button');
+                btn.id = 'music-start';
+                btn.className = 'audio-btn';
+                btn.textContent = '▶️ Start Music';
+                btn.addEventListener('click', async () => {
+                    await audioContext.resume();
+                    await createBackgroundMusic();
+                    await loadClickSample();
+                    btn.remove();
+                }, { once: true });
+                document.querySelector('.audio-controls').appendChild(btn);
+            } else {
+                // autoplay allowed — load and start audio now
+                await createBackgroundMusic();
+                await loadClickSample();
+            }
         }
 
         // Create background music by loading a recorded chant (looped)
@@ -507,21 +900,65 @@
             this.textContent = soundEnabled ? '🔊 ध्वनि' : '🔇 ध्वनि';
         });
 
-        // Reset game
+        // Reset game with custom modal
         function resetGame() {
-            if (confirm('क्या आप वाकई सभी प्रगति खोना चाहते हैं? यह कार्रवाई पूर्ववत नहीं की जा सकती।')) {
-                localStorage.removeItem('hanumanClicker');
-                ramCount = 0;
-                clickPower = 1;
-                ramsPerSecond = 0;
-                totalClicks = 0;
-                totalUpgrades = 0;
-                upgrades.forEach(u => u.owned = 0);
-                achievements.forEach(a => a.unlocked = false);
-                updateDisplay();
-                renderAchievements();
-                alert('खेल रीसेट कर दिया गया है!');
+            showResetModal();
+        }
+
+        function showResetModal() {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            overlay.innerHTML = `
+                <div class="modal">
+                    <h3>🔄 खेल रीसेट करें</h3>
+                    <p>क्या आप वाकई सभी प्रगति खोना चाहते हैं?<br>यह कार्रवाई पूर्ववत नहीं की जा सकती।</p>
+                    <div class="modal-buttons">
+                        <button class="modal-btn confirm" id="confirm-reset-btn">हाँ, रीसेट करें</button>
+                        <button class="modal-btn cancel" id="cancel-reset-btn">रद्द करें</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            
+            // Add event listeners
+            document.getElementById('confirm-reset-btn').addEventListener('click', confirmReset);
+            document.getElementById('cancel-reset-btn').addEventListener('click', closeResetModal);
+            
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    closeResetModal();
+                }
+            });
+        }
+
+        function closeResetModal() {
+            const overlay = document.querySelector('.modal-overlay');
+            if (overlay) {
+                overlay.remove();
             }
+        }
+
+        function confirmReset() {
+            localStorage.removeItem('hanumanClicker');
+            ramCount = 0;
+            clickPower = 1;
+            ramsPerSecond = 0;
+            totalClicks = 0;
+            totalUpgrades = 0;
+            upgrades.forEach(u => u.owned = 0);
+            achievements.forEach(a => a.unlocked = false);
+            updateDisplay();
+            renderAchievements();
+            closeResetModal();
+            showSuccessNotification('खेल रीसेट कर दिया गया है!');
+        }
+
+        function showSuccessNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'success-notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
         }
 
         document.getElementById('reset-btn').addEventListener('click', resetGame);
@@ -533,10 +970,10 @@
 
         const upgrades = [
             { id: 'mala', name: 'माला (Mala)', desc: '+1 प्रति क्लिक', baseCost: 100, owned: 0, isClickPower: true, clickBonus: 1 },
-            { id: 'bell', name: 'घंटी (Bell)', desc: '+5 राम/सेकंड', baseCost: 400, owned: 0, production: 1 },
-            { id: 'temple', name: 'मंदिर (Temple)', desc: '+20 राम/सेकंड', baseCost: 2000, owned: 0, production: 5 },
-            { id: 'ashram', name: 'आश्रम (Ashram)', desc: '+50 राम/सेकंड', baseCost: 7000, owned: 0, production: 10 }, 
-            { id: 'mountain', name: 'संजीवनी पर्वत', desc: '+150 राम/सेकंड', baseCost: 17000, owned: 0, production: 100 },
+            { id: 'bell', name: 'घंटी (Bell)', desc: '+1 राम/सेकंड', baseCost: 400, owned: 0, production: 1 },
+            { id: 'temple', name: 'मंदिर (Temple)', desc: '+5 राम/सेकंड', baseCost: 2000, owned: 0, production: 5 },
+            { id: 'ashram', name: 'आश्रम (Ashram)', desc: '+10 राम/सेकंड', baseCost: 7000, owned: 0, production: 10 }, 
+            { id: 'mountain', name: 'संजीवनी पर्वत', desc: '+100 राम/सेकंड', baseCost: 17000, owned: 0, production: 100 },
             { id: 'strength', name: 'बल वृद्धि', desc: '2x क्लिक पावर', baseCost: 5000, owned: 0, isMultiplier: true, multiplier: 2 },
             { id: 'devotion', name: 'भक्ति शक्ति', desc: '3x क्लिक पावर', baseCost: 20000, owned: 0, isMultiplier: true, multiplier: 3 }
         ];
@@ -571,24 +1008,76 @@
             setInterval(saveGame, 5000);
         }
 
-        // Click Handler
-        hanumanBtn.addEventListener('click', (e) => {
-            ramCount += clickPower;
+        // Click Handler - Support both mouse and touch
+        let isProcessingClick = false;
+        
+        function handleClick(e) {
+            // Prevent multiple triggers
+            if (isProcessingClick) return;
+            isProcessingClick = true;
+            
+            // Prevent default to avoid double-trigger on touch devices
+            e.preventDefault();
+            
+            const ramAdded = clickPower;
+            ramCount += ramAdded;
             totalClicks++;
             updateDisplay();
-            createFloatingText(e.clientX, e.clientY);
-            playRamSound();
+            
+            // Get position from touch or mouse event
+            const x = (e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX) || window.innerWidth / 2;
+            const y = (e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY) || window.innerHeight / 2;
+            
+            // Create visual effects - only once per click
+            createFloatingText(x, y, ramAdded);
+            createParticles(x, y);
+            playRamSound(); // Only play once per click
             checkAchievements();
-        });
+            
+            // Reset flag after a short delay
+            setTimeout(() => {
+                isProcessingClick = false;
+            }, 100);
+        }
 
-        function createFloatingText(x, y) {
+        hanumanBtn.addEventListener('click', handleClick);
+        hanumanBtn.addEventListener('touchstart', handleClick, { passive: false });
+
+        function createFloatingText(x, y, amount) {
             const text = document.createElement('div');
             text.className = 'floating-text';
-            text.textContent = 'राम';
+            text.textContent = "+" + formatNumber(amount) + ' राम';
             text.style.left = x + 'px';
             text.style.top = y + 'px';
             document.body.appendChild(text);
             setTimeout(() => text.remove(), 1000);
+        }
+
+        function createParticles(x, y) {
+            const particles = ['🕉️', '🙏', '📿', '⚡', '🔱'];
+            const particleCount = 5;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+                
+                // Random direction and rotation
+                const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.5;
+                const distance = 50 + Math.random() * 50;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                const rot = Math.random() * 360;
+                
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.setProperty('--rot', rot + 'deg');
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1500);
+            }
         }
 
         function buyUpgrade(upgrade) {
@@ -617,7 +1106,7 @@
                 const cost = Math.floor(upgrade.baseCost * Math.pow(2.15, upgrade.owned));
                 const canBuy = ramCount >= cost;
                 return `
-                    <div class="upgrade ${canBuy ? '' : 'disabled'}" onclick="buyUpgrade(upgrades.find(u => u.id === '${upgrade.id}'))">
+                    <div class="upgrade ${canBuy ? 'affordable' : 'disabled'}" onclick="buyUpgrade(upgrades.find(u => u.id === '${upgrade.id}'))">
                         <div class="upgrade-header">
                             <div class="upgrade-name">${upgrade.name}</div>
                             <div class="upgrade-cost">${formatNumber(cost)} राम धन</div>
@@ -654,18 +1143,22 @@
 
         function showAchievementNotification(ach) {
             const notification = document.createElement('div');
+            const isMobile = window.innerWidth <= 768;
             notification.style.cssText = `
                 position: fixed;
-                top: 20px;
-                right: 20px;
+                top: ${isMobile ? '80px' : '20px'};
+                right: ${isMobile ? '10px' : '20px'};
+                left: ${isMobile ? '10px' : 'auto'};
                 background: linear-gradient(135deg, #138808, #4CAF50);
                 color: white;
-                padding: 20px;
+                padding: ${isMobile ? '15px' : '20px'};
                 border-radius: 10px;
                 font-weight: bold;
-                z-index: 1000;
+                z-index: 1001;
                 box-shadow: 0 5px 30px rgba(0,0,0,0.3);
                 animation: slideIn 0.5s ease-out;
+                font-size: ${isMobile ? '0.9em' : '1em'};
+                text-align: center;
             `;
             notification.innerHTML = `${ach.icon} उपलब्धि अनलॉक: ${ach.name}`;
             document.body.appendChild(notification);
@@ -709,8 +1202,6 @@
             if (saved) {
                 const gameState = JSON.parse(saved);
                 ramCount = gameState.ramCount || 0;
-                clickPower = gameState.clickPower || 1;
-                ramsPerSecond = gameState.ramsPerSecond || 0;
                 totalClicks = gameState.totalClicks || 0;
                 totalUpgrades = gameState.totalUpgrades || 0;
                 
@@ -726,18 +1217,64 @@
                     });
                 }
                 
+                // Use saved values if available, otherwise recalculate
+                if (gameState.clickPower !== undefined) {
+                    clickPower = gameState.clickPower;
+                } else {
+                    // Recalculate from upgrades
+                    clickPower = 1;
+                    upgrades.forEach(upgrade => {
+                        if (upgrade.isClickPower) {
+                            clickPower += upgrade.clickBonus * upgrade.owned;
+                        } else if (upgrade.isMultiplier) {
+                            clickPower *= Math.pow(upgrade.multiplier, upgrade.owned);
+                        }
+                    });
+                }
+                
+                if (gameState.ramsPerSecond !== undefined) {
+                    ramsPerSecond = gameState.ramsPerSecond;
+                } else {
+                    // Recalculate from upgrades
+                    ramsPerSecond = 0;
+                    upgrades.forEach(upgrade => {
+                        if (!upgrade.isClickPower && !upgrade.isMultiplier) {
+                            ramsPerSecond += upgrade.production * upgrade.owned;
+                        }
+                    });
+                }
+                
                 updateDisplay();
                 renderAchievements();
             }
         }
 
         // Start the game
-        window.addEventListener('click', function initAudioOnClick() {
+        document.addEventListener('DOMContentLoaded', function() {
             initAudio();
-            window.removeEventListener('click', initAudioOnClick);
+        });
+
+        // Add click listener to resume AudioContext on any user interaction
+        document.addEventListener('click', async function resumeAudioOnClick() {
+            if (audioContext && audioContext.state === 'suspended') {
+                await audioContext.resume();
+                await createBackgroundMusic();
+                await loadClickSample();
+                console.log('AudioContext resumed and music started');
+            }
+            document.removeEventListener('click', resumeAudioOnClick);
         }, { once: true });
-        
+
         init();
+        document.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            });
+
+            document.addEventListener("keydown", function (e) {
+            if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+            }
+            });
     </script>
 </body>
 </html>
