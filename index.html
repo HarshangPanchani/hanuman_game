@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanuman Clicker - Jai Shri Ram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9933 0%, #ffffff 50%, #138808 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #ff6600;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: linear-gradient(135deg, #ff6600, #ff9933);
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat span {
+            display: block;
+            font-size: 1.5em;
+            margin-top: 5px;
+        }
+
+        .audio-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .audio-btn {
+            background: linear-gradient(135deg, #ff6600, #ff9933);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .audio-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .audio-btn:active {
+            transform: translateY(0);
+        }
+
+        .audio-btn.muted {
+            background: linear-gradient(135deg, #888, #aaa);
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .clicker-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #hanuman-btn {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 5px solid #ff6600;
+            color:white;
+            background: linear-gradient(135deg, #ff9933, #ffcc00);
+            font-size: 4em;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 0 10px 40px rgba(255, 102, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        #hanuman-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(255, 102, 0, 0.6);
+        }
+
+        #hanuman-btn:active {
+            transform: scale(0.95);
+        }
+
+        .floating-text {
+            position: absolute;
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff6600;
+            pointer-events: none;
+            animation: float-up 1s ease-out forwards;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+        }
+
+        .upgrades-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .upgrades-section h2 {
+            color: #ff6600;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .upgrade {
+            background: linear-gradient(135deg, #fff, #ffe6cc);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 2px solid #ff9933;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upgrade:hover:not(.disabled) {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(255, 102, 0, 0.3);
+        }
+
+        .upgrade.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .upgrade-name {
+            font-weight: bold;
+            color: #ff6600;
+            font-size: 1.1em;
+        }
+
+        .upgrade-cost {
+            background: #ff6600;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .upgrade-desc {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .upgrade-owned {
+            color: #138808;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .achievements {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .achievements h2 {
+            color: #ff6600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement {
+            background: linear-gradient(135deg, #fff, #ffe6cc);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #ddd;
+        }
+
+        .achievement.unlocked {
+            border-color: #138808;
+            box-shadow: 0 0 20px rgba(19, 136, 8, 0.3);
+        }
+
+        .achievement-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .achievement-name {
+            font-weight: bold;
+            color: #ff6600;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 1024px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            #hanuman-btn {
+                width: 200px;
+                height: 200px;
+                font-size: 3em;
+            }
+
+            .stats {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="audio-controls">
+            <button class="audio-btn" id="music-toggle">🎵 Music</button>
+            <button class="audio-btn" id="sound-toggle">🔊 Sound</button>
+            <button class="audio-btn" id="reset-btn" style="background: linear-gradient(135deg, #dc3545, #ff6b6b);">🔄 Reset</button>
+        </div>
+
+        <header>
+            <h1>🕉️ Hanuman Clicker 🕉️</h1>
+            <div class="stats">
+                <div class="stat">
+                    <div>राम धन</div>
+                    <span id="ram-count">0</span>
+                </div>
+                <div class="stat">
+                    <div>प्रति क्लिक</div>
+                    <span id="per-click">1</span>
+                </div>
+                <div class="stat">
+                    <div>प्रति सेकंड</div>
+                    <span id="per-second">0</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="game-area">
+            <div class="clicker-section">
+                <h2 style="color: #ff6600; margin-bottom: 20px;">जय हनुमान ज्ञान गुण सागर!</h2>
+                <button id="hanuman-btn">“श्री राम”</button>
+                <p style="color: #666; font-size: 1.2em; margin-top: 20px;">क्लिक करें और राम नाम जपें! <br><h2 style="color: #ff6600;">“जय श्री राम”</h2><br></p>
+            </div>
+
+            <div class="upgrades-section">
+                <h2>⚡ उन्नयन (Upgrades) ⚡</h2>
+                <div id="upgrades-list"></div>
+            </div>
+        </div>
+
+        <div class="achievements">
+            <h2>🏆 उपलब्धियाँ (Achievements) 🏆</h2>
+            <div class="achievement-grid" id="achievements-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Audio Setup
+        let musicEnabled = true;
+        let soundEnabled = true;
+        let audioContext;
+        let backgroundMusic;
+
+        // Audio sample buffers
+        let clickBuffer = null;
+        let bellBuffers = [];
+
+        // Initialize Audio Context
+        async function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            await createBackgroundMusic();
+            await loadClickSample();
+        }
+
+        // Create background music by loading a recorded chant (looped)
+        async function createBackgroundMusic() {
+            try {
+                const url = 'ram_ram.mp3'; // place your chant here
+                const resp = await fetch(url);
+                const ab = await resp.arrayBuffer();
+                const audioBuffer = await audioContext.decodeAudioData(ab);
+
+                const gainNode = audioContext.createGain();
+                gainNode.gain.setValueAtTime(musicEnabled ? 0.5 : 0, audioContext.currentTime);
+
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.loop = true;
+
+                source.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                source.start();
+
+                backgroundMusic = { source, gainNode };
+            } catch (err) {
+                console.error('Failed to load background audio:', err);
+            }
+        }
+
+        // Load a short 'Ram' click sample for click sounds
+        async function loadClickSample() {
+            try {
+                const url = 'assets/ram_click.mp3';
+                const resp = await fetch(url);
+                const ab = await resp.arrayBuffer();
+                clickBuffer = await audioContext.decodeAudioData(ab);
+            } catch (err) {
+                console.warn('Failed to load click sample:', err);
+                clickBuffer = null;
+            }
+        }
+
+        // Load bell sound samples
+        async function loadBellSamples(urls) {
+            bellBuffers = [];
+            for (const url of urls) {
+                try {
+                    const r = await fetch(url);
+                    const ab = await r.arrayBuffer();
+                    const buf = await audioContext.decodeAudioData(ab);
+                    bellBuffers.push(buf);
+                } catch (e) { console.warn('Bell load failed:', url, e); }
+            }
+        }
+
+        // Play "Ram" sound effect (uses recorded sample if available)
+        function playRamSound() {
+            if (!soundEnabled || !audioContext) return;
+
+            if (clickBuffer) {
+                const s = audioContext.createBufferSource();
+                const g = audioContext.createGain();
+                s.buffer = clickBuffer;
+                g.gain.setValueAtTime(0.9, audioContext.currentTime);
+                s.connect(g);
+                g.connect(audioContext.destination);
+                s.start();
+                return;
+            }
+
+            // Fallback if sample not loaded
+            //const oscillator = audioContext.createOscillator();
+            //const gainNode = audioContext.createGain();
+
+            //oscillator.type = 'sine';
+            //oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+
+            //gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            //gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+
+            //oscillator.connect(gainNode);
+            //gainNode.connect(audioContext.destination);
+
+            //oscillator.start(audioContext.currentTime);
+            //oscillator.stop(audioContext.currentTime + 0.2);
+
+            const oscillator = audioContext.createOscillator();
+    const oscillator2 = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    // Triangle wave for metallic bell sound
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+    
+    // Second oscillator for richer harmonics
+    oscillator2.type = 'sine';
+    oscillator2.frequency.setValueAtTime(400, audioContext.currentTime);
+    
+    // Bell-like decay
+    gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.7);
+    
+    oscillator.connect(gainNode);
+    oscillator2.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator2.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+    oscillator2.stop(audioContext.currentTime + 0.5);
+
+        }
+
+        // Play bell sound with random pitch and volume
+        function playBell() {
+            if (!soundEnabled || !audioContext) return;
+            if (bellBuffers.length === 0) { playRamSound(); return; }
+            const buf = bellBuffers[Math.floor(Math.random() * bellBuffers.length)];
+            const src = audioContext.createBufferSource();
+            const gain = audioContext.createGain();
+            src.buffer = buf;
+            // small random volume and pitch for natural feel
+            gain.gain.setValueAtTime(0.7 + Math.random() * 0.4, audioContext.currentTime);
+            src.playbackRate.setValueAtTime(0.95 + Math.random() * 0.1, audioContext.currentTime);
+            src.connect(gain);
+            gain.connect(audioContext.destination);
+            src.start();
+        }
+
+        // Toggle music
+        document.getElementById('music-toggle').addEventListener('click', function() {
+            musicEnabled = !musicEnabled;
+            if (backgroundMusic) {
+                backgroundMusic.gainNode.gain.setValueAtTime(
+                    musicEnabled ? 0.05 : 0, 
+                    audioContext.currentTime
+                );
+            }
+            this.classList.toggle('muted', !musicEnabled);
+            this.textContent = musicEnabled ? '🎵 संगीत' : '🔇 संगीत';
+        });
+
+        // Toggle sound effects
+        document.getElementById('sound-toggle').addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            this.classList.toggle('muted', !soundEnabled);
+            this.textContent = soundEnabled ? '🔊 ध्वनि' : '🔇 ध्वनि';
+        });
+
+        // Reset game
+        function resetGame() {
+            if (confirm('क्या आप वाकई सभी प्रगति खोना चाहते हैं? यह कार्रवाई पूर्ववत नहीं की जा सकती।')) {
+                localStorage.removeItem('hanumanClicker');
+                ramCount = 0;
+                clickPower = 1;
+                ramsPerSecond = 0;
+                totalClicks = 0;
+                totalUpgrades = 0;
+                upgrades.forEach(u => u.owned = 0);
+                achievements.forEach(a => a.unlocked = false);
+                updateDisplay();
+                renderAchievements();
+                alert('खेल रीसेट कर दिया गया है!');
+            }
+        }
+
+        document.getElementById('reset-btn').addEventListener('click', resetGame);
+
+        // Game State
+        let ramCount = 0;
+        let clickPower = 1;
+        let ramsPerSecond = 0;
+
+        const upgrades = [
+            { id: 'mala', name: 'माला (Mala)', desc: '+1 प्रति क्लिक', baseCost: 100, owned: 0, isClickPower: true, clickBonus: 1 },
+            { id: 'bell', name: 'घंटी (Bell)', desc: '+5 राम/सेकंड', baseCost: 400, owned: 0, production: 1 },
+            { id: 'temple', name: 'मंदिर (Temple)', desc: '+20 राम/सेकंड', baseCost: 2000, owned: 0, production: 5 },
+            { id: 'ashram', name: 'आश्रम (Ashram)', desc: '+50 राम/सेकंड', baseCost: 7000, owned: 0, production: 10 }, 
+            { id: 'mountain', name: 'संजीवनी पर्वत', desc: '+150 राम/सेकंड', baseCost: 17000, owned: 0, production: 100 },
+            { id: 'strength', name: 'बल वृद्धि', desc: '2x क्लिक पावर', baseCost: 5000, owned: 0, isMultiplier: true, multiplier: 2 },
+            { id: 'devotion', name: 'भक्ति शक्ति', desc: '3x क्लिक पावर', baseCost: 20000, owned: 0, isMultiplier: true, multiplier: 3 }
+        ];
+
+        const achievements = [
+            { id: 'first', name: 'पहला कदम', desc: '1 राम', icon: '🙏', threshold: 1, unlocked: false },
+            { id: 'hundred', name: 'शत राम', desc: '100 राम', icon: '📿', threshold: 100, unlocked: false },
+            { id: 'thousand', name: 'सहस्त्र राम', desc: '1000 राम', icon: '🔱', threshold: 1000, unlocked: false },
+            { id: 'devotee', name: 'भक्त', desc: '5000 राम', icon: '🕉️', threshold: 5000, unlocked: false },
+            { id: 'master', name: 'महाभक्त', desc: '10000 राम', icon: '⚡', threshold: 10000, unlocked: false },
+            { id: 'clicker', name: 'क्लिकर', desc: '100 क्लिक', icon: '👆', threshold: 100, type: 'clicks', unlocked: false },
+            { id: 'buyer', name: 'खरीदार', desc: '10 उन्नयन', icon: '🛒', threshold: 10, type: 'upgrades', unlocked: false }
+        ];
+
+        let totalClicks = 0;
+        let totalUpgrades = 0;
+
+        // DOM Elements
+        const ramCountEl = document.getElementById('ram-count');
+        const perClickEl = document.getElementById('per-click');
+        const perSecondEl = document.getElementById('per-second');
+        const hanumanBtn = document.getElementById('hanuman-btn');
+        const upgradesList = document.getElementById('upgrades-list');
+        const achievementsGrid = document.getElementById('achievements-grid');
+
+        // Initialize
+        function init() {
+            renderUpgrades();
+            renderAchievements();
+            loadGame();
+            setInterval(autoGenerate, 1000);
+            setInterval(saveGame, 5000);
+        }
+
+        // Click Handler
+        hanumanBtn.addEventListener('click', (e) => {
+            ramCount += clickPower;
+            totalClicks++;
+            updateDisplay();
+            createFloatingText(e.clientX, e.clientY);
+            playRamSound();
+            checkAchievements();
+        });
+
+        function createFloatingText(x, y) {
+            const text = document.createElement('div');
+            text.className = 'floating-text';
+            text.textContent = 'राम';
+            text.style.left = x + 'px';
+            text.style.top = y + 'px';
+            document.body.appendChild(text);
+            setTimeout(() => text.remove(), 1000);
+        }
+
+        function buyUpgrade(upgrade) {
+            const cost = Math.floor(upgrade.baseCost * Math.pow(2.15, upgrade.owned));
+            if (ramCount >= cost) {
+                ramCount -= cost;
+                upgrade.owned++;
+                totalUpgrades++;
+                
+                if (upgrade.isClickPower) {
+                    clickPower += upgrade.clickBonus;
+                } else if (upgrade.isMultiplier) {
+                    clickPower *= upgrade.multiplier;
+                } else {
+                    ramsPerSecond += upgrade.production;
+                }
+                
+                updateDisplay();
+                renderUpgrades();
+                checkAchievements();
+            }
+        }
+
+        function renderUpgrades() {
+            upgradesList.innerHTML = upgrades.map(upgrade => {
+                const cost = Math.floor(upgrade.baseCost * Math.pow(2.15, upgrade.owned));
+                const canBuy = ramCount >= cost;
+                return `
+                    <div class="upgrade ${canBuy ? '' : 'disabled'}" onclick="buyUpgrade(upgrades.find(u => u.id === '${upgrade.id}'))">
+                        <div class="upgrade-header">
+                            <div class="upgrade-name">${upgrade.name}</div>
+                            <div class="upgrade-cost">${formatNumber(cost)} राम धन</div>
+                        </div>
+                        <div class="upgrade-desc">${upgrade.desc}</div>
+                        <div class="upgrade-owned">स्वामित्व: ${upgrade.owned}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAchievements() {
+            achievementsGrid.innerHTML = achievements.map(ach => `
+                <div class="achievement ${ach.unlocked ? 'unlocked' : ''}">
+                    <div class="achievement-icon">${ach.unlocked ? ach.icon : '🔒'}</div>
+                    <div class="achievement-name">${ach.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function checkAchievements() {
+            achievements.forEach(ach => {
+                if (!ach.unlocked) {
+                    const value = ach.type === 'clicks' ? totalClicks : 
+                                  ach.type === 'upgrades' ? totalUpgrades : ramCount;
+                    if (value >= ach.threshold) {
+                        ach.unlocked = true;
+                        showAchievementNotification(ach);
+                    }
+                }
+            });
+            renderAchievements();
+        }
+
+        function showAchievementNotification(ach) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #138808, #4CAF50);
+                color: white;
+                padding: 20px;
+                border-radius: 10px;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+                animation: slideIn 0.5s ease-out;
+            `;
+            notification.innerHTML = `${ach.icon} उपलब्धि अनलॉक: ${ach.name}`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function autoGenerate() {
+            ramCount += ramsPerSecond;
+            updateDisplay();
+            checkAchievements();
+        }
+
+        function updateDisplay() {
+            ramCountEl.textContent = formatNumber(Math.floor(ramCount));
+            perClickEl.textContent = formatNumber(clickPower);
+            perSecondEl.textContent = formatNumber(ramsPerSecond);
+            renderUpgrades();
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function saveGame() {
+            const gameState = {
+                ramCount,
+                clickPower,
+                ramsPerSecond,
+                upgrades,
+                achievements,
+                totalClicks,
+                totalUpgrades
+            };
+            localStorage.setItem('hanumanClicker', JSON.stringify(gameState));
+        }
+
+        function loadGame() {
+            const saved = localStorage.getItem('hanumanClicker');
+            if (saved) {
+                const gameState = JSON.parse(saved);
+                ramCount = gameState.ramCount || 0;
+                clickPower = gameState.clickPower || 1;
+                ramsPerSecond = gameState.ramsPerSecond || 0;
+                totalClicks = gameState.totalClicks || 0;
+                totalUpgrades = gameState.totalUpgrades || 0;
+                
+                if (gameState.upgrades) {
+                    gameState.upgrades.forEach((savedUpgrade, index) => {
+                        upgrades[index].owned = savedUpgrade.owned;
+                    });
+                }
+                
+                if (gameState.achievements) {
+                    gameState.achievements.forEach((savedAch, index) => {
+                        achievements[index].unlocked = savedAch.unlocked;
+                    });
+                }
+                
+                updateDisplay();
+                renderAchievements();
+            }
+        }
+
+        // Start the game
+        window.addEventListener('click', function initAudioOnClick() {
+            initAudio();
+            window.removeEventListener('click', initAudioOnClick);
+        }, { once: true });
+        
+        init();
+    </script>
+</body>
+</html>
